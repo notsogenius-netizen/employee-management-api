@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class EmployeeService {
@@ -28,5 +30,20 @@ public class EmployeeService {
         existingEmployee.setDepartment(employee.getDepartment());
 
         return employeeRepo.save(existingEmployee);
+    }
+
+    public void deleteEmployee(Long id){
+        employeeRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found", HttpStatus.NOT_FOUND));
+        employeeRepo.deleteById(id);
+    }
+
+    public Employee getEmployeeById(Long id){
+        return employeeRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found", HttpStatus.NOT_FOUND));
+    }
+
+    public List<Employee> getAllEmployees(){
+        return employeeRepo.findAll();
     }
 }
