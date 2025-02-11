@@ -39,5 +39,5 @@ public class Employee {
     @JoinTable(name = "employee_projects",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private Set<Project> projects = new HashSet<>();
+    private Set<Project> projects;
 }

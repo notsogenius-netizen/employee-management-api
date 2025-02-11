@@ -1,5 +1,6 @@
 package com.sourabh.employee_management_system.controllers;
 
+import com.sourabh.employee_management_system.dto.EmployeeDTO;
 import com.sourabh.employee_management_system.entities.Employee;
 import com.sourabh.employee_management_system.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee){
-        return ResponseEntity.status(HttpStatus.OK).body(employeeService.addEmployee(employee));
+    public ResponseEntity<Employee> addEmployee(@RequestBody EmployeeDTO employeeDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.addEmployee(employeeDTO));
     }
 
     @GetMapping
@@ -26,5 +27,19 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getAllEmployees());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.getEmployeeById(id));
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.updateEmployee(id, employee));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
 }
