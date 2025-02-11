@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: employee-management-system
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee-management-system
+    username: postgres
+    password: mypassword
+  jpa:
+    database-platform: org.hibernate.dialect.PosgreSQLInnoDBDialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  server:
+    port: 8080
