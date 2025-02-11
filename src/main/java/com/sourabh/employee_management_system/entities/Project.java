@@ -22,5 +22,5 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "employer_id", nullable = false)
-    private String employer;
+    private Employer employer;
 }
