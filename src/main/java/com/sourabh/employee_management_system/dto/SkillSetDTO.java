@@ -1,0 +1,14 @@
+package com.sourabh.employee_management_system.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SkillSetDTO {
+    private Long id;
+
+    private String name;
+}
