@@ -11,16 +11,20 @@ import com.sourabh.employee_management_system.repo.ProjectRepo;
 import com.sourabh.employee_management_system.repo.SkillSetRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class EmployeeService {
+public class EmployeeService{
 
     @Autowired
     private EmployeeRepo employeeRepo;
@@ -31,6 +35,7 @@ public class EmployeeService {
     @Autowired
     private ProjectRepo projectRepo;
 
+//    @CachePut(value = "employees", key= "#employee.id")
     public Employee addEmployee(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         employee.setName(employeeDTO.getName());
@@ -44,7 +49,7 @@ public class EmployeeService {
                         .orElseThrow(() -> new ResourceNotFoundException("Skill not found with ID: " + skillId, HttpStatus.NOT_FOUND)))
                 .collect(Collectors.toSet());
 
-        // ✅ Fetch projects from database instead of directly assigning IDs
+        // Fetch projects from database instead of directly assigning IDs
         Set<Project> projects = employeeDTO.getProjects().stream()
                 .map(projectId -> projectRepo.findById(projectId)
                         .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + projectId,HttpStatus.NOT_FOUND)))
@@ -56,6 +61,7 @@ public class EmployeeService {
         return employeeRepo.save(employee);
     }
 
+    @CachePut(value = "employees", key= "#id")
     public Employee updateEmployee(Long id, Employee employee){
         Employee existingEmployee  = employeeRepo.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Employee not found", HttpStatus.NOT_FOUND));
@@ -67,16 +73,19 @@ public class EmployeeService {
         return employeeRepo.save(existingEmployee);
     }
 
+    @CacheEvict(value = "employees", key= "#id")
     public void deleteEmployee(Long id){
         employeeRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found", HttpStatus.NOT_FOUND));
         employeeRepo.deleteById(id);
     }
 
+    @Cacheable(value = "employees", key= "#id")
     public Employee getEmployeeById(Long id){
         return employeeRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found", HttpStatus.NOT_FOUND));
     }
+
 
     public List<Employee> getAllEmployees(){
         return employeeRepo.findAll();
